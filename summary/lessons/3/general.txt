@@ -1,0 +1,28 @@
+ABI provides the interface to interact with a contract
+
+use `is` key word to inherit from a contract
+
+import "./Parent.sol";
+
+contract Child is Parent {}
+
+use `override` and `virtual` keywords to override a function from an inherited contract
+
+// file --- Parent.sol
+Contract Parent {
+    string public name = "Blessing";
+
+    // add the virtual keyword 
+    function changeName(string memory _name) public virtual {
+        name = _name;
+    } 
+}
+
+// file --- Child.sol
+Contract Child is Parent {
+
+    // add the override keyword
+    function changeName(string memory _name) public override {
+        name = "Anonymous";
+    }
+}
