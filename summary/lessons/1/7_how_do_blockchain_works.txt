@@ -1,0 +1,1 @@
+the first block in a block chain is the genesis block

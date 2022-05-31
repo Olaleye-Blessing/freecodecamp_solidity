@@ -1,0 +1,11 @@
+Consensus --- mechanism used to agree on the state of the blockchain
+
+Chain Selection
+Sybil Resistance --- defines who is the block author.
+
+types of Sybil
+Proof of work
+Proof of stake
+
+Sybil attack --- create bunch of psuedo accounts to influence a network
+51% attack

@@ -1,0 +1,14 @@
+every smart contract has an address just like wallet address
+
+function visibility -- https://docs.soliditylang.org/en/v0.8.14/cheatsheet.html?highlight=visibility#function-visibility-specifiers
+
+public
+private -- only visible in the current contract
+internal -- visible in current contract and children contracts(contracts that inherited from current one)
+external -- only visible externally
+
+function modifiers -- https://docs.soliditylang.org/en/v0.8.14/cheatsheet.html?highlight=visibility#modifiers
+pure -- can not access or modify a state
+view -- can only access but can not modifiy a state
+
+both don't cost any gas when called alone but will cost gas if called by another function that costs gas
