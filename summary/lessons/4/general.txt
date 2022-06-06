@@ -1,0 +1,15 @@
+smart contracts can hold funds the same way wallets can.
+
+any function mark payable is used to send eth
+
+Blockchain oracle is any device that interacts with the off-chain world to provide external data or computation to smart contracts
+
+Decentralized oracle network
+
+Chainlink is a tech for getting externl data in a Decentralized context for our contracts
+
+Use Chanlink (dataset feed) to get the current price of any asset.
+
+Chanlink VRF(verifialble random function)
+
+Chanlink Keepers -- Decentralized event driven computation
