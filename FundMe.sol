@@ -10,6 +10,13 @@ contract FundMe {
     address[] public funders;
     mapping(address => uint256) public addressToAmountFunded;
 
+    address public owner;
+
+    // this runs automatically, runs when contract is created
+    constructor(){
+        owner = msg.sender; // msg.sender is the person that deployed/created this contract
+    }
+
     // any function mark payable is used to send eth
     function fund() public payable {
         // msg is the person that calls this function
@@ -27,7 +34,8 @@ contract FundMe {
         addressToAmountFunded[msg.sender] = msg.value;
     }
 
-    function withdrawal() public {
+    // only allow the owner of this contract to withdraw
+    function withdrawal() public onlyOwner {
         // for loop syntax -- for(startIndex, endIndex, step)
         for(uint256 index = 0; index < funders.length; index++) {
             address funder = funders[index];
@@ -67,5 +75,10 @@ contract FundMe {
 
         (bool sendSuccess, ) = payable(msg.sender).call{value: address(this).balance}(""); // leave it blank so as to use it as a transaction by using ("")
         require(sendSuccess, "Sending failed");
+    }
+
+    modifier onlyOwner () {
+        require(msg.sender == owner);
+        _; // this means continue execution of the function using this modifier;
     }
 }
