@@ -26,4 +26,46 @@ contract FundMe {
         funders.push(msg.sender); // msg.sender is the address of the person that calls this function
         addressToAmountFunded[msg.sender] = msg.value;
     }
+
+    function withdrawal() public {
+        // for loop syntax -- for(startIndex, endIndex, step)
+        for(uint256 index = 0; index < funders.length; index++) {
+            address funder = funders[index];
+            addressToAmountFunded[funder] = 0;
+        }
+
+        // to reset an array --- new arrayType[](length)
+        // e.g new uint256[](0) --- an empty array of type uint256
+        // e.g new string[](1) -- an array of string with one element
+
+        // reset funders
+        funders = new address[](0);
+
+        // methods to send/withdraw ether from a contract
+        // transfer -- maximum gas of 2300. It throws an error if failed, thereby automatically revert if it fails
+        // send -- maximum gas of 2300. It returns true/false. You need to manually revert if it fails
+        // call -- forward all gas or set gas. returns (true/false, function). Need to manually revert if it fails
+
+        // address needs to be payable address when sending/receiving ether
+        // address test = 0x8.........  type of address
+        // payable(test) = .......... type of payable address
+
+        // using transfer
+        // payable(msg.sender).transfer(address(this).balance); // this revert if failed
+        // msg.sender --- the address that calls this function
+        // payable(msg.sender) --- typecast to payable address
+        // this --- refers to current contract
+        // address(this) -- typecast to address
+        // address(this).balance -- ether available in this contract
+
+        // using send
+        // bool sendSuccess = payable(msg.sender).send(address(this).balance);
+        // require(sendSuccess, "Withdraw failed"); // manually revert
+
+        // using call command
+        // pass in a callback function when using call. (Don't worry about this now, come back to it later)
+
+        (bool sendSuccess, ) = payable(msg.sender).call{value: address(this).balance}(""); // leave it blank so as to use it as a transaction by using ("")
+        require(sendSuccess, "Sending failed");
+    }
 }
