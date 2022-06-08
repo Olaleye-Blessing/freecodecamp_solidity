@@ -3,18 +3,27 @@ pragma solidity ^0.8.8;
 
 import "./PriceConverter.sol";
 
+// custom error
+// using custom error saves gas
+error NotOwner();
+
 contract FundMe {
     using PriceConverter for uint256;
 
-    uint256 public minimumUSD = 50 * 1e18; // this will be in wei
+    // use constants for variables that only get set one time -- this make the variables gas efficient
+    uint256 public constant MINIMUMUSD = 5 * 1e18; // this will be in wei
     address[] public funders;
     mapping(address => uint256) public addressToAmountFunded;
 
-    address public owner;
+    // immutable also make varaibles gas efficient
+    // immutable variables can only be assigned once
+    // Immutable variables can be assigned an arbitrary value in the constructor of the contract or at the point of their declaration.
+
+    address public immutable i_owner;
 
     // this runs automatically, runs when contract is created
     constructor(){
-        owner = msg.sender; // msg.sender is the person that deployed/created this contract
+        i_owner = msg.sender; // msg.sender is the person that deployed/created this contract
     }
 
     // any function mark payable is used to send eth
@@ -26,9 +35,9 @@ contract FundMe {
         // that has been done and send the remaining gas back
         // require(msg.value > 1e18, "Didn't send enough eth"); // 1e18 = 1 * 10 ** 18wei = 1eth
 
-        // require(getConvertionRate(msg.value) > minimumUSD, "Didn't send enough eth"); // 1e18 = 1 * 10 ** 18wei = 1eth
+        // require(getConvertionRate(msg.value) > MINIMUMUSD, "Didn't send enough eth"); // 1e18 = 1 * 10 ** 18wei = 1eth
         // we're not passing any value into getConvertionRate because the the varaible that calls it is passed in as the first parameter
-        require(msg.value.getConvertionRate() > minimumUSD, "Didn't send enough eth");
+        require(msg.value.getConvertionRate() > MINIMUMUSD, "Didn't send enough eth");
 
         funders.push(msg.sender); // msg.sender is the address of the person that calls this function
         addressToAmountFunded[msg.sender] = msg.value;
@@ -77,8 +86,20 @@ contract FundMe {
         require(sendSuccess, "Sending failed");
     }
 
-    modifier onlyOwner () {
-        require(msg.sender == owner);
+    modifier onlyOwner {
+        // require(msg.sender == i_owner);
+
+        // using ustom error
+        if(msg.sender != i_owner) { revert NotOwner(); } // revert does the same job as require
+        
         _; // this means continue execution of the function using this modifier;
+    }
+
+    receive() external payable {
+        fund();
+    }
+
+    fallback() external payable {
+        fund();
     }
 }
